@@ -1,0 +1,6 @@
+---
+# vars file for mysql
+mysql_service_name: mysql
+ubuntu_pkg:
+  - mysql-server
+  - python-mysqldb

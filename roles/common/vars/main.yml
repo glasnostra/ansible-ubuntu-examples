@@ -1,0 +1,6 @@
+---
+basic_packages:
+  - git
+  - wget
+  - iptables
+  - nano

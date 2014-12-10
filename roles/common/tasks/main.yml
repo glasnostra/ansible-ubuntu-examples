@@ -1,0 +1,7 @@
+---
+# Common setup
+# Description: Basic setup and installation for webserver
+# 
+- name: Ensure dev packages to be latest
+  apt: name={{ item }} state=latest
+  with_items: basic_packages

@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: vagrant
+  sudo: yes
+  roles:
+  - { role: roles/common }
+  - { role: lagilaper.nginx }
+  - { role: lagilaper.php5-fpm, php_conf_max_children: 3, php_conf_start_servers: 1, php_conf_pm: dynamic,
+      ubuntu_pkg: [ php5-common, php5-curl, php5-json, php5-gd, php5-mysql ]
+    }
+  - { role: roles/mysql, mysql_root_password: root }

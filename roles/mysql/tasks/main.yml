@@ -1,0 +1,35 @@
+---
+# tasks file for mysql
+- name: Installing mysql server
+  apt: name={{ item }} state=present update_cache=yes
+  with_items: ubuntu_pkg
+  when: ansible_os_family == "Debian"
+
+- name: start mysql service
+  service: name={{mysql_service_name}} state=started enabled=yes
+
+- name: copy .my.cnf file with root credentials
+  template: src=.my.cnf.j2 dest=/root/.my.cnf mode=0600
+  
+- name: set up MySQL root password
+  mysql_user: name=root host="{{ item }}" password="{{ mysql_root_password }}"
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: remove anonymous user
+  mysql_user: name="" state=absent
+
+- name: remove the test database
+  mysql_db: name=test state=absent
+
+- name: MySQL databases
+  mysql_db: name="{{ item }}" state=present
+  with_items: mysql_dbs
+
+- name: MySQL users
+  mysql_user: name="{{ item.name }}" host="{{ item.host | default('127.0.0.1') }}" password="{{ item.password | default('root') }}"
+              priv="{{ item.priv | default('*.*:ALL') }}" state=present
+  with_items: mysql_users
